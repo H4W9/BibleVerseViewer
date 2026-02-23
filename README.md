@@ -1,6 +1,10 @@
 # Bible Verse Viewer — Flipper Zero App
 
 
+A full-featured offline and online Bible reader for the Flipper Zero. Browse, search, and bookmark verses from SD card files, or look up any reference live via the Bible API — no account or API key required.
+
+
+
 <img width="512" height="256" alt="Screenshot-20260222-151511" src="https://github.com/user-attachments/assets/1410d733-d8f0-46de-bb21-350bcc4c13e4" /> 
 
 <img width="512" height="256" alt="Screenshot-20260222-151545" src="https://github.com/user-attachments/assets/4c988859-72fc-448d-b147-f50ae8b99315" /> 
@@ -13,8 +17,6 @@
 
 
 
-
-A full-featured offline and online Bible reader for the Flipper Zero. Browse, search, and bookmark verses from SD card files, or look up any reference live via the Bible API — no account or API key required.
 
 **Credits:** I used FlipperHTTP and Custom Font files from [JBlanked's](https://github.com/jblanked) project here... [Hello-World-Flipper-Zero](https://github.com/jblanked/Hello-World-Flipper-Zero).
 
