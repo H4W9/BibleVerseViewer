@@ -17,10 +17,12 @@
 A full-featured offline and online Bible reader for the Flipper Zero. Browse, search, and bookmark verses from SD card files, or look up any reference live via the Bible API — no account or API key required.
 
 **Credits:** I used FlipperHTTP and Custom Font files from [JBlanked's](https://github.com/jblanked) project here... [Hello-World-Flipper-Zero](https://github.com/jblanked/Hello-World-Flipper-Zero).
-          
-          This app was built with the assistance of [Claude](https://www.google.com/aclk?sa=L&pf=1&ai=DChsSEwj2ouHcyO6SAxVpFK0GHeImMJIYACICCAEQARoCcHY&co=1&ase=2&gclid=Cj0KCQiA7-rMBhCFARIsAKnLKtCsQdQJL2gmzqz5jsZBJ7hhI2l-HVuQ3-vNUiLQEz--k6bTNDZTz1EaArLgEALw_wcB&cid=CAASWuRop1HLx_wJXV_6YNoiswCR_CMK1oeLWmejtkjGwuQatm9-O6-DLRbSDIJ5DeArBQzVyEnGCyjfMfuNvLcrhULbSAVmO0jon8KWGZYhFK9_yxti0CDO2Z4tfA&cce=2&category=acrcp_v1_32&sig=AOD64_0rqbc12ct-DZqYYuzELr-Tdhr7gA&q&nis=4&adurl=https://chaton.ai/claude/?utm_source%3Dgoogle%26utm_medium%3Dcpc%26utm_campaign%3DGA%2520%7C%2520ChatOn%2520%7C%2520Web%2520%7C%2520US%2520%7C%2520Search%2520%7C%2520Main%2520%7C%2520CPA%2520%7C%252021.07.25%26utm_content%3D790508279447%26utm_term%3Dclaude%2520ai%26campaign_id%3D22809916767%26adset_id%3D186149762341%26ad_id%3D790508279447%26gad_source%3D1%26gad_campaignid%3D22809916767%26gbraid%3D0AAAAA9SXzF5Rcu5MIgUy86oFRsGg2F56b%26gclid%3DCj0KCQiA7-rMBhCFARIsAKnLKtCsQdQJL2gmzqz5jsZBJ7hhI2l-HVuQ3-vNUiLQEz--k6bTNDZTz1EaArLgEALw_wcB&ved=2ahUKEwjy_9rcyO6SAxUGOjQIHcy8ItMQ0Qx6BAgoEAE)
-          
-          Image to XBM converter: [ImageToXBM](https://www.online-utility.org/image/convert/to/XBM)
+
+This app was built with the assistance of [Claude](https://www.google.com/aclk?sa=L&pf=1&ai=DChsSEwj2ouHcyO6SAxVpFK0GHeImMJIYACICCAEQARoCcHY&co=1&ase=2&gclid=Cj0KCQiA7-rMBhCFARIsAKnLKtCsQdQJL2gmzqz5jsZBJ7hhI2l-HVuQ3-vNUiLQEz--k6bTNDZTz1EaArLgEALw_wcB&cid=CAASWuRop1HLx_wJXV_6YNoiswCR_CMK1oeLWmejtkjGwuQatm9-O6-DLRbSDIJ5DeArBQzVyEnGCyjfMfuNvLcrhULbSAVmO0jon8KWGZYhFK9_yxti0CDO2Z4tfA&cce=2&category=acrcp_v1_32&sig=AOD64_0rqbc12ct-DZqYYuzELr-Tdhr7gA&q&nis=4&adurl=https://chaton.ai/claude/?utm_source%3Dgoogle%26utm_medium%3Dcpc%26utm_campaign%3DGA%2520%7C%2520ChatOn%2520%7C%2520Web%2520%7C%2520US%2520%7C%2520Search%2520%7C%2520Main%2520%7C%2520CPA%2520%7C%252021.07.25%26utm_content%3D790508279447%26utm_term%3Dclaude%2520ai%26campaign_id%3D22809916767%26adset_id%3D186149762341%26ad_id%3D790508279447%26gad_source%3D1%26gad_campaignid%3D22809916767%26gbraid%3D0AAAAA9SXzF5Rcu5MIgUy86oFRsGg2F56b%26gclid%3DCj0KCQiA7-rMBhCFARIsAKnLKtCsQdQJL2gmzqz5jsZBJ7hhI2l-HVuQ3-vNUiLQEz--k6bTNDZTz1EaArLgEALw_wcB&ved=2ahUKEwjy_9rcyO6SAxUGOjQIHcy8ItMQ0Qx6BAgoEAE)
+
+Image to XBM converter: [ImageToXBM](https://www.online-utility.org/image/convert/to/XBM)
+
+
 
 **Version:** 1.3  
 **Screen:** 128×64 px  
