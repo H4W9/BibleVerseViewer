@@ -5,15 +5,15 @@ A full-featured offline and online Bible reader for the Flipper Zero. Browse, se
 
 ---
 
-<img width="512" height="256" alt="Screenshot-20260222-151511" src="https://github.com/user-attachments/assets/1410d733-d8f0-46de-bb21-350bcc4c13e4" /> 
+<img width=19% height=19% alt="Screenshot-20260222-151511" src="https://github.com/user-attachments/assets/1410d733-d8f0-46de-bb21-350bcc4c13e4" /> 
 
-<img width="512" height="256" alt="Screenshot-20260222-151545" src="https://github.com/user-attachments/assets/4c988859-72fc-448d-b147-f50ae8b99315" /> 
+<img width=19% height=19% alt="Screenshot-20260222-151545" src="https://github.com/user-attachments/assets/4c988859-72fc-448d-b147-f50ae8b99315" /> 
 
-<img width="512" height="256" alt="Screenshot-20260222-151838" src="https://github.com/user-attachments/assets/c5b08212-5fe7-4c64-b9cb-dc9aea7fe28b" /> 
+<img width=19% height=19% alt="Screenshot-20260222-151838" src="https://github.com/user-attachments/assets/c5b08212-5fe7-4c64-b9cb-dc9aea7fe28b" /> 
 
-<img width="512" height="256" alt="Screenshot-20260222-152806" src="https://github.com/user-attachments/assets/b6412c9a-4f99-42de-9dd0-f7eb0d9b20e5" /> 
+<img width=19% height=19% alt="Screenshot-20260222-152806" src="https://github.com/user-attachments/assets/b6412c9a-4f99-42de-9dd0-f7eb0d9b20e5" /> 
 
-<img width="512" height="256" alt="Screenshot-20260222-151731" src="https://github.com/user-attachments/assets/56577e86-331c-4122-97f7-f6c116447849" />
+<img width=19% height=19% alt="Screenshot-20260222-151731" src="https://github.com/user-attachments/assets/56577e86-331c-4122-97f7-f6c116447849" />
 
 
 ---
