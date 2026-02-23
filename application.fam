@@ -1,0 +1,13 @@
+App(
+    appid="bible_viewer",
+    name="Bible Verse Viewer",
+    apptype=FlipperAppType.EXTERNAL,
+    entry_point="bible_viewer_app",
+    stack_size=4 * 1024,
+    fap_category="Tools",
+    fap_icon="bible_icon.png",
+    fap_icon_assets="icons",
+    fap_author="@claude + H4W9",
+    fap_version="1.0",
+    fap_description="View and search Bible verses on your Flipper Zero",
+)
