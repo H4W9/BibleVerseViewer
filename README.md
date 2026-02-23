@@ -3,7 +3,7 @@
 
 A full-featured offline and online Bible reader for the Flipper Zero. Browse, search, and bookmark verses from SD card files, or look up any reference live via the Bible API — no account or API key required.
 
-
+---
 
 <img width="512" height="256" alt="Screenshot-20260222-151511" src="https://github.com/user-attachments/assets/1410d733-d8f0-46de-bb21-350bcc4c13e4" /> 
 
@@ -16,6 +16,7 @@ A full-featured offline and online Bible reader for the Flipper Zero. Browse, se
 <img width="512" height="256" alt="Screenshot-20260222-151731" src="https://github.com/user-attachments/assets/56577e86-331c-4122-97f7-f6c116447849" />
 
 
+---
 
 
 **Credits:** I used FlipperHTTP and Custom Font files from [JBlanked's](https://github.com/jblanked) project here... [Hello-World-Flipper-Zero](https://github.com/jblanked/Hello-World-Flipper-Zero).
@@ -25,9 +26,8 @@ This app was built with the assistance of [Claude](https://www.google.com/aclk?s
 Image to XBM converter: [ImageToXBM](https://www.online-utility.org/image/convert/to/XBM)
 
 
+---
 
-**Version:** 1.3  
-**Screen:** 128×64 px  
 **Requires:** SD card with at least one verse file (`.txt` format)
 
 ---
