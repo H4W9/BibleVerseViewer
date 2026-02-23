@@ -43,7 +43,7 @@ Image to XBM converter: [ImageToXBM](https://www.online-utility.org/image/conver
 | **Bookmarks** | Long-press OK on any verse to toggle a bookmark; browse all bookmarks from the main menu |
 | **5 Font Sizes** | Tiny (4×6), Small (5×8), Medium (6×10), Large (9×15), Flipper built-in |
 
-### Online (requires FlipperHTTP WiFi dev board)
+### Online (requires  WiFi dev board flashed with [FlipperHTTP firmware](https://github.com/jblanked/FlipperHTTP))
 
 Connects to [bible-api.com](https://bible-api.com) — free, no account or API key needed.
 
