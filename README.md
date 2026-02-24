@@ -200,24 +200,7 @@ ufbt update --channel=dev       # bleeding-edge dev firmware
 
 If your Flipper runs custom firmware (e.g. Momentum, RogueMaster) you may need to point uFBT at that firmware's SDK to avoid API version mismatches. See `ufbt update --help` for details.
 
-### 3. Project layout
-
-```
-bible_viewer/
-├── README.md
-├── application.fam
-├── bible_viewer.c
-├── bible_data.h
-├── icon.png
-├── font/
-│   ├── font.h
-│   └── font.c
-└── flipper_http/
-    ├── flipper_http.h
-    └── flipper_http.c
-```
-
-### 4. Build
+### 3. Build
 
 Run `ufbt` from inside the `bible_viewer/` directory (the one containing `application.fam`):
 
@@ -228,7 +211,7 @@ ufbt
 
 The compiled `.fap` is placed in `dist/`. Copy it to your Flipper's SD card under `/ext/apps/Misc/`.
 
-### 5. Build, install, and launch in one step
+### 4. Build, install, and launch in one step
 
 With your Flipper connected over USB (and qFlipper closed):
 
@@ -238,7 +221,7 @@ ufbt launch
 
 This compiles, uploads, and starts the app on the device automatically.
 
-### 6. SDK updates
+### 5. SDK updates
 
 ```bash
 ufbt update   # re-download SDK from previously selected channel
