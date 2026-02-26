@@ -1,0 +1,87 @@
+name: "FAP Build & Release"
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+  #schedule:
+    # do a build every day
+  #  - cron: "1 1 * * *"
+jobs:
+  ufbt-build-action:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: dev channel
+            sdk-channel: dev
+          - name: release channel
+            sdk-channel: release
+          - name: Unleashed dev
+            sdk-index-url: https://up.unleashedflip.com/directory.json
+            sdk-channel: dev
+          - name: Unleashed release
+            sdk-index-url: https://up.unleashedflip.com/directory.json
+            sdk-channel: release
+    name: 'ufbt: Build for ${{ matrix.name }}'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Build with ufbt
+        uses: flipperdevices/flipperzero-ufbt-action@v0.1.2
+        id: build-app
+        with:
+          sdk-channel: ${{ matrix.sdk-channel }}
+          sdk-index-url: ${{ matrix.sdk-index-url }}
+      - name: Upload app artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}-${{ steps.build-app.outputs.suffix }}
+          path: ${{ steps.build-app.outputs.fap-artifacts }}
+
+  create-draft-release:
+    runs-on: ubuntu-latest
+    needs: ufbt-build-action
+    # Only create a draft release on pushes to main, not on PRs
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Extract version from application.fam
+        id: get-version
+        run: |
+          VERSION=$(grep -oP '(?<=fap_version=\()\d+,\s*\d+' application.fam | tr -d ' ' | tr ',' '.')
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Extracted version: ${VERSION}"
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          name: "BibleVerseViewer v${{ steps.get-version.outputs.version }}"
+          tag_name: "v${{ steps.get-version.outputs.version }}"
+          files: artifacts/**/*
+          body: |
+            ## BibleVerseViewer v${{ steps.get-version.outputs.version }}
+
+            Built from commit ${{ github.sha }}.
+
+            ### Firmware builds included:
+            - 🐬 Official firmware — dev channel
+            - 🐬 Official firmware — release channel
+            - 🔓 Unleashed firmware — dev channel
+            - 🔓 Unleashed firmware — release channel
+
+            ### Installation
+            Copy the `.fap` file matching your firmware to `SD Card/apps/` on your Flipper Zero.
