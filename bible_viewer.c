@@ -49,6 +49,7 @@
 #define LINE_H              10
 #define HDR_H               12
 #define BODY_Y              14
+#define API_RESULT_FOOTER_H  9   // height of the translation pill badge at screen bottom
 #define WRAP_MAX_LINES       8
 #define WRAP_LINE_LEN       32   // wide enough for any font (max ~30 chars)
 #define REF_LEN             24   // chars stored for reference display
@@ -1791,6 +1792,12 @@ static void draw_api_loading(Canvas* canvas, App* app) {
 
 static void draw_api_result(Canvas* canvas, App* app) {
     draw_hdr(canvas, app->api_result_ref[0] ? app->api_result_ref : "Result");
+    // Prev/next hints sit inside the header, flanking the centred reference
+    canvas_set_color(canvas, ColorWhite);
+    canvas_set_font(canvas, FontSecondary);
+    canvas_draw_str_aligned(canvas, 2,            1, AlignLeft,  AlignTop, "<");
+    canvas_draw_str_aligned(canvas, SCREEN_W - 2, 1, AlignRight, AlignTop, ">");
+    canvas_set_color(canvas, ColorBlack);
     apply_verse_font(canvas, app->font_choice);
     uint8_t lh  = FONT_LINE_H[app->font_choice];
     uint8_t vis = font_visible_lines(app->font_choice);
@@ -1799,11 +1806,17 @@ static void draw_api_result(Canvas* canvas, App* app) {
             BODY_Y + i*lh + lh - 1,
             app->api_wrap.lines[app->api_wrap.scroll + i]);
     draw_scrollbar(canvas, app->api_wrap.scroll, app->api_wrap.count, vis);
-    // Translation label bottom-right
+    // Translation code — dark pill badge, bottom-right corner
     canvas_set_font(canvas, FontSecondary);
-    canvas_draw_str_aligned(canvas, SCREEN_W-2, SCREEN_H-1,
-        AlignRight, AlignBottom,
-        API_TRANSLATIONS[app->api_trans_sel].code);
+    const char* trans_str = API_TRANSLATIONS[app->api_trans_sel].code;
+    uint8_t pad = 3;
+    uint8_t rw  = (uint8_t)canvas_string_width(canvas, trans_str);
+    uint8_t by  = SCREEN_H - API_RESULT_FOOTER_H;
+    canvas_set_color(canvas, ColorBlack);
+    canvas_draw_rbox(canvas, SCREEN_W - rw - pad * 2, by, rw + pad * 2, API_RESULT_FOOTER_H + 3, 3);
+    canvas_set_color(canvas, ColorWhite);
+    canvas_draw_str_aligned(canvas, SCREEN_W - pad, SCREEN_H - 1, AlignRight, AlignBottom, trans_str);
+    canvas_set_color(canvas, ColorBlack);
 }
 
 static void draw_api_error(Canvas* canvas, App* app) {
@@ -2481,8 +2494,38 @@ static void on_api_result(App* app, InputEvent* ev) {
         if(app->api_wrap.scroll > 0) app->api_wrap.scroll--;
         break;
     case InputKeyDown:
-        if(app->api_wrap.scroll + vis < app->api_wrap.count)
+        if(app->api_wrap.scroll + vis <= app->api_wrap.count)
             app->api_wrap.scroll++;
+        break;
+    case InputKeyLeft:  // previous verse (wraps across chapters/books)
+        if(ev->type != InputTypeShort) break;
+        if(app->api_verse_sel > 1) {
+            app->api_verse_sel--;
+        } else if(app->api_chapter_sel > 1) {
+            app->api_chapter_sel--;
+            app->api_verse_sel = book_chapter_verses(app->api_book_sel, app->api_chapter_sel);
+        } else {
+            if(app->api_book_sel > 0) app->api_book_sel--;
+            else                      app->api_book_sel = BIBLE_BOOKS_COUNT - 1;
+            app->api_chapter_sel = BIBLE_BOOKS[app->api_book_sel].chapters;
+            app->api_verse_sel   = book_chapter_verses(app->api_book_sel, app->api_chapter_sel);
+        }
+        api_fetch_quick(app);
+        break;
+    case InputKeyRight:  // next verse (wraps across chapters/books)
+        if(ev->type != InputTypeShort) break;
+        if(app->api_verse_sel < book_chapter_verses(app->api_book_sel, app->api_chapter_sel)) {
+            app->api_verse_sel++;
+        } else if(app->api_chapter_sel < BIBLE_BOOKS[app->api_book_sel].chapters) {
+            app->api_chapter_sel++;
+            app->api_verse_sel = 1;
+        } else {
+            if(app->api_book_sel < BIBLE_BOOKS_COUNT - 1) app->api_book_sel++;
+            else                                           app->api_book_sel = 0;
+            app->api_chapter_sel = 1;
+            app->api_verse_sel   = 1;
+        }
+        api_fetch_quick(app);
         break;
     case InputKeyBack:
         app->view = ViewApiMenu;
