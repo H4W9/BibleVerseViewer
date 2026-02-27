@@ -55,9 +55,25 @@ jobs:
       - name: Extract version from application.fam
         id: get-version
         run: |
-          VERSION=$(grep -oP '(?<=fap_version=\()\d+,\s*\d+' application.fam | tr -d ' ' | tr ',' '.')
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "=== application.fam contents ==="
+          cat application.fam
+          echo "================================"
+
+          # Try to extract fap_version in various formats:
+          # fap_version=(1, 0)  or  fap_version=(1,0)  or  fap_version = (1, 0)
+          VERSION=$(python3 -c "
+          import re, sys
+          content = open('application.fam').read()
+          match = re.search(r'fap_version\s*=\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)', content)
+          if match:
+              print(f'{match.group(1)}.{match.group(2)}')
+          else:
+              print('UNKNOWN')
+              sys.exit(1)
+          ")
+
           echo "Extracted version: ${VERSION}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
       - name: Delete existing release and tag if present
         env:
@@ -74,14 +90,11 @@ jobs:
 
       - name: Rename artifacts to avoid filename conflicts
         run: |
-          # Each artifact is in its own subdirectory named after the artifact.
-          # Rename every .fap inside to include the subdirectory (firmware variant) name.
           find artifacts/ -name "*.fap" | while read fap; do
             dir=$(basename $(dirname "$fap"))
             filename=$(basename "$fap" .fap)
             mv "$fap" "artifacts/${filename}-${dir}.fap"
           done
-          # Clean up now-empty subdirectories
           find artifacts/ -type d -empty -delete
           echo "Release assets:"
           ls artifacts/*.fap
