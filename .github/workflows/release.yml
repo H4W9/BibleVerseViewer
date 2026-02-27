@@ -55,21 +55,21 @@ jobs:
       - name: Extract version from application.fam
         id: get-version
         run: |
-          echo "=== application.fam contents ==="
-          cat application.fam
-          echo "================================"
-
-          # Try to extract fap_version in various formats:
-          # fap_version=(1, 0)  or  fap_version=(1,0)  or  fap_version = (1, 0)
+          # Handles both formats:
+          # fap_version="1.3"  (string)
+          # fap_version=(1, 3)  (tuple)
           VERSION=$(python3 -c "
           import re, sys
           content = open('application.fam').read()
-          match = re.search(r'fap_version\s*=\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)', content)
-          if match:
-              print(f'{match.group(1)}.{match.group(2)}')
-          else:
-              print('UNKNOWN')
+          match = re.search(r'fap_version\s*=\s*[\"\']([\d.]+)[\"\']', content) or \
+                  re.search(r'fap_version\s*=\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)', content)
+          if not match:
+              print('Could not find fap_version', file=sys.stderr)
               sys.exit(1)
+          if match.lastindex == 1:
+              print(match.group(1))
+          else:
+              print(f'{match.group(1)}.{match.group(2)}')
           ")
 
           echo "Extracted version: ${VERSION}"
