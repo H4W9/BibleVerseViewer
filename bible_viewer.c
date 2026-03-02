@@ -1516,7 +1516,10 @@ static void on_main_menu(App* app, InputEvent* ev) {
             open_verse(app, (uint16_t)(rng_next(&app->rng) % app->verse_count), ViewRandomVerse);
             app->view = ViewRandomVerse; break;
         case MenuDaily: {
-            uint32_t today = furi_get_tick() / (1000u * 60 * 60 * 24);
+            DateTime dt;
+            furi_hal_rtc_get_datetime(&dt);
+            // Encode calendar date as a unique day number (not affected by reboots)
+            uint32_t today = (uint32_t)dt.year * 372 + (uint32_t)dt.month * 31 + dt.day;
             if(today != app->daily_verse_day || app->daily_verse_idx >= app->verse_count) {
                 app->rng ^= furi_get_tick();
                 app->daily_verse_idx = (uint16_t)(rng_next(&app->rng) % app->verse_count);
