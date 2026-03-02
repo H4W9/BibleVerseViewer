@@ -872,6 +872,8 @@ void kb_submit(App* app) {
         extern void api_fetch(App*);
         api_fetch(app);
     } else {
+        app->view = ViewLoading;
+        view_port_update(app->view_port);
         do_search(app);
         app->view = ViewSearchResults;
     }
@@ -892,8 +894,25 @@ void kb_update_suggestion(App* app) {
     app->kb_suggestion[0] = '\0';
     if(!app->api_input_active) return;
     if(!app->search_len) return;
-    // Stop suggesting once the user has typed a complete book name + space
-    if(app->search_buf[app->search_len - 1] == ' ') return;
+    // Stop suggesting once the user has typed a complete book name + space,
+    // but only if no book name is still being prefixed. This allows numbered
+    // books like "1 Samuel" or "2 Kings" to keep suggesting after "1 " or "2 ".
+    if(app->search_buf[app->search_len - 1] == ' ') {
+        bool still_prefixing = false;
+        for(uint8_t b = 0; b < BIBLE_BOOKS_COUNT; b++) {
+            const char* name = BIBLE_BOOKS[b].name;
+            if(strlen(name) <= app->search_len) continue;
+            bool match = true;
+            for(uint8_t i = 0; i < app->search_len; i++) {
+                char t = app->search_buf[i], n = name[i];
+                if(t >= 'A' && t <= 'Z') t += 32;
+                if(n >= 'A' && n <= 'Z') n += 32;
+                if(t != n) { match = false; break; }
+            }
+            if(match) { still_prefixing = true; break; }
+        }
+        if(!still_prefixing) return;
+    }
 
     for(uint8_t b = 0; b < BIBLE_BOOKS_COUNT; b++) {
         const char* name = BIBLE_BOOKS[b].name;

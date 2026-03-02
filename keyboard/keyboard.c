@@ -10,7 +10,7 @@
 
 const char kb_page0[KB_NROWS][KB_NCOLS] = {
     { 'q','w','e','r','t','y','u','i','o','p','1','2','3' },
-    { 'a','s','d','f','g','h','j','k','l','-','4','5','6' },
+    { 'a','s','d','f','g','h','j','k','l',':','4','5','6' },
     { 'z','x','c','v','b','n','m',',','.','_','7','8','9' },
 };
 
@@ -71,8 +71,17 @@ void draw_search_input(Canvas* canvas, App* app) {
     // Input field
     canvas_set_font_custom(canvas, FONT_SIZE_MEDIUM);
     canvas_draw_frame(canvas, 2, HDR_H + 1, SCREEN_W - 4, 12);
-    char disp[MAX_SEARCH_LEN + 4];
-    snprintf(disp, sizeof(disp), "%s_", app->search_buf);
+    char disp[MAX_SEARCH_LEN + 28];
+    // Show ghost suggestion: "typed_remainder" so the user sees what Hold-OK will accept
+    bool has_suggestion = app->kb_suggestion[0] != '\0' &&
+                          app->api_input_active &&
+                          app->search_len < (uint8_t)strlen(app->kb_suggestion);
+    if(has_suggestion) {
+        snprintf(disp, sizeof(disp), "%s_%s", app->search_buf,
+                 app->kb_suggestion + app->search_len);
+    } else {
+        snprintf(disp, sizeof(disp), "%s_", app->search_buf);
+    }
     canvas_draw_str(canvas, 4, HDR_H + 10, disp);
 
     // Keyboard grid
@@ -181,11 +190,22 @@ void draw_search_results(Canvas* canvas, App* app) {
 
 void on_search(App* app, InputEvent* ev) {
 
-    // ── Hold OK: type the opposite-case version of the current letter ────────
-    // If caps is OFF, hold-OK types the UPPER-case letter (one-shot capital).
-    // If caps is ON,  hold-OK types the lower-case letter (one-shot lowercase).
-    // This mirrors the reference implementation exactly.
+    // ── Hold OK: accept book suggestion if available, otherwise type opposite-case ─
     if(ev->type == InputTypeLong && ev->key == InputKeyOk) {
+        // When a suggestion is active, Hold-OK accepts it (copies full name + space)
+        if(app->api_input_active && app->kb_suggestion[0] != '\0') {
+            uint8_t slen = (uint8_t)strlen(app->kb_suggestion);
+            if(slen + 1 < MAX_SEARCH_LEN) {
+                memcpy(app->search_buf, app->kb_suggestion, slen);
+                app->search_buf[slen]     = ' ';
+                app->search_buf[slen + 1] = '\0';
+                app->search_len = slen + 1;
+            }
+            kb_update_suggestion(app);
+            app->kb_long_consumed = true;
+            return;
+        }
+        // No suggestion: type the opposite-case version of the current letter
         if(app->kb_row < KB_NROWS && app->kb_page == 0) {
             char ch = kb_page0[app->kb_row][app->kb_col];
             if(ch >= 'a' && ch <= 'z') {
@@ -260,18 +280,21 @@ void on_search(App* app, InputEvent* ev) {
                     app->search_len += (uint8_t)slen;
                     app->search_buf[app->search_len] = '\0';
                 }
+                kb_update_suggestion(app);
             }
         } else {
             // Special button row
             switch(app->kb_col) {
             case 0: // DEL
                 search_buf_backspace(app);
+                kb_update_suggestion(app);
                 break;
             case 1: // SPC
                 if(app->search_len < MAX_SEARCH_LEN - 1) {
                     app->search_buf[app->search_len++] = ' ';
                     app->search_buf[app->search_len]   = '\0';
                 }
+                kb_update_suggestion(app);
                 break;
             case 2: // CAP (only active on page 0; "---" on page 1)
                 if(app->kb_page == 0) app->kb_caps = !app->kb_caps;
@@ -279,13 +302,8 @@ void on_search(App* app, InputEvent* ev) {
             case 3: // SYM / UML / ABC -- cycle pages 0 -> 1 -> 2 -> 0
                 app->kb_page = (app->kb_page == 0) ? 1 : (app->kb_page == 1) ? 2 : 0;
                 break;
-            case 4: // GO! -- run search
-                if(app->search_len > 0) {
-                    app->view = ViewLoading;
-                    view_port_update(app->view_port);
-                    do_search(app);
-                    app->view = ViewSearchResults;
-                }
+            case 4: // GO! -- run search or API lookup depending on mode
+                if(app->search_len > 0) kb_submit(app);
                 break;
             }
         }
@@ -295,10 +313,12 @@ void on_search(App* app, InputEvent* ev) {
     // Matches reference behaviour: Back acts as DEL while there is text,
     // and only navigates away once the buffer is fully cleared.
     case InputKeyBack:
-        if(app->search_len > 0)
+        if(app->search_len > 0) {
             search_buf_backspace(app);
-        else
+            kb_update_suggestion(app);
+        } else {
             app->view = ViewMainMenu;
+        }
         break;
 
     default: break;
