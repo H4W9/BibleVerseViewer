@@ -216,6 +216,7 @@ void on_search(App* app, InputEvent* ev) {
                 if(app->search_len < MAX_SEARCH_LEN - 1) {
                     app->search_buf[app->search_len++] = ch;
                     app->search_buf[app->search_len]   = '\0';
+                    kb_update_suggestion(app);
                 }
             }
         }
